@@ -14,6 +14,18 @@ implement on full project_video.mp4) and create a heat map of recurring
 detections frame by frame to reject outliers and follow detected vehicles.
 * Estimate a bounding box for vehicles detected.
 
+[//]: # (Image References)
+
+[image1]: ./output_images/hog-visualization/car-hog.png
+[image2]: ./output_images/histogram-visualization/car-color-orig.png
+[image3]: ./output_images/histogram-visualization/car-histogram.png
+[image4]: ./output_images/histogram-visualization/spatially-binned-features.png
+[image5]: ./output_images/sliding-window/sliding-window-64.png
+[image6]: ./output_images/sliding-window/sliding-window-128.png
+[image7]: ./output_images/sliding-window/heat-map-single-scale.png
+[image8]: ./output_images/sliding-window/heat-map-multi-scale.png
+
+
 ### Data Exploration
 
 * Number of vehicle images: 8792
@@ -26,7 +38,13 @@ them to get a feel for what the skimage.hog() output looks like.
 Here is an example using the RGB color space and HOG parameters of orientations=9 ,
 pixels_per_cell=(8, 8) and cells_per_block=(2, 2) :
 
+![alt text][image1]
+
 I also visualized the color histograms and the spatial bins (RGB):
+
+![alt text][image2]
+![alt text][image3]
+![alt text][image4]
 
 I tried various combinations of parameters (code cell for all features on a sample of
 1000 and then 2000 images from vehicles and non vehicles set. The best fit with over
@@ -55,9 +73,13 @@ color histogram features and hog features (code cell 11) and got an accuracy of 
 With overlap = 0.5 and xy_window as (64, 64) i got the following results on the test
 images:
 
+![alt text][image5]
+
 It searched over 800 windows (some needlessly) and missed the white cars in several
 of these images and finds cars in tree. So next I edited the y crop to not include the tree
 and sky portion and set xy_window to 128. The results:
+
+![alt text][image6]
 
 There are several false positives and it misses the cars that are far away (smaller
 scale)
@@ -66,10 +88,14 @@ Single scale (1.5) window search without thresholding and without using
 scipy.ndimage.measurements.label() to identify individual blobs in heat maps yielded
 these results:
 
+![alt text][image7]
+
 Ultimately I searched on multi scales (1 to 3.5) using YCrCb 3-channel HOG features
 plus spatially binned color and histograms of color in the feature vector, which provided
 a nice result. I also added heat map calculations and thresholding the heat map for
 better results (cell 14). Here are some example images:
+
+![alt text][image8]
 
 ### Final Result
 
